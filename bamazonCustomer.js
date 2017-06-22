@@ -49,6 +49,7 @@ function runSearch() {
 		}
 	});
 }
+// select the current value, then make that a variable to do the math needed in JS
 function productSearch() {
 	inquirer
 	.prompt({
@@ -61,4 +62,7 @@ function productSearch() {
 
 
 runSearch();
+
+
+//2nd call to update that entry to the new value.
 
