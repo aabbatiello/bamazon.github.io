@@ -60,5 +60,5 @@ function productSearch() {
 }
 
 
-//runSearch();
+runSearch();
 
