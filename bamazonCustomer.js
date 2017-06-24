@@ -21,48 +21,48 @@ function queryAllData() {
 	connection.query("SELECT * FROM products", function(err, res) {
 		if (err) throw err;
 		for (var i = 0; i < res.length; i++) {
-			console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].price);
+			console.log(res[i].item_id + " | " + res[i].product_name + " | "+ res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity);
 		}
 		console.log("-----------------------------------");
+		runSearch()
 	});
 }
 
 
 function runSearch() {
-	inquirer.prompt({
-		name: "action",
-		type: "list",
-		message: "What would you like to do?",
-		choices: [
-		"Find product by id",
-		"Number of units to purhase",
-		]
-	}).then(function(answer) {
-		switch (answer.action) {
-			case "Find product by id":
-				productSearch();
-				break;
-
-			case"Number of units to purhase":
-				unitsCalc();
-				break;
-		}
-	});
-}
-// select the current value, then make that a variable to do the math needed in JS
-function productSearch() {
-	inquirer
-	.prompt({
-		name: "item_id",
-		type: "input",
-		message: "What id or product would you like to buy?"
-
-	})
-}
+	inquirer.prompt([
+        {
+            name: "id",
+            type: "input",
+            message: "What item id are you interested in?"
+        }, {
+            name: 'quantity',
+            type: 'input',
+            message: "How many?"
+        },
 
 
-runSearch();
+	 ]).then(function(answers) {
+        
+        var quantity = answers.quantity;
+        var id = answers.id;
+        buy(id, quantity);
+    });
+
+}; 
 
 
-//2nd call to update that entry to the new value.
+function buy(id, purchase) {
+   
+    connection.query('SELECT * FROM products WHERE item_id = ' + id, function(err,res) {
+       if (purchase <= res[0].stock_quantity) {
+            var total = res[0].price * purchase;
+           
+            console.log("Thank you for your Business!");
+            connection.query('UPDATE Products SET stock_quantity = stock_quantity - ' + purchase + ' WHERE item_id = ' + id);
+
+ 		}
+ 		queryAllData()
+ 	}
+ )};  
 
